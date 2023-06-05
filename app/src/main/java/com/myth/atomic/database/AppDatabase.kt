@@ -13,6 +13,7 @@ import com.myth.atomic.model.Task
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun getGoalDao(): GoalDao
+    abstract fun getJournalDao(): JournalDao
 
     companion object{
         @Volatile
