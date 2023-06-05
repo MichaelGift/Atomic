@@ -11,5 +11,6 @@ data class Goals(
     val goalDeadline: Long,
     val goalTasks: List<Task>,
     val goalReminder: Reminder,
-    val isGoalCompleted: Boolean
+    val isGoalCompleted: Boolean,
+    val goalJournal: Journal
 )
