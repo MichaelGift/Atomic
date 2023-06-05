@@ -8,6 +8,7 @@ data class Goals(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val goalName: String,
+    val goalDescription:String,
     val goalDeadline: Long,
     val goalTasks: List<Task>,
     val goalReminder: Reminder,

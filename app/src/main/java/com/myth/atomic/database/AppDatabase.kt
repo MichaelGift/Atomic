@@ -12,6 +12,8 @@ import com.myth.atomic.model.Task
 @Database(entities = [Goals::class, Reminder::class, Task::class, Journal::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
 
+    abstract fun getGoalDao(): GoalDao
+
     companion object{
         @Volatile
         private var instance : AppDatabase? = null
