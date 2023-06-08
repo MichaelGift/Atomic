@@ -11,5 +11,6 @@ data class Task(
     val taskDescription: String,
     val taskReminders: List<Reminder>,
     val isTaskCompleted: Boolean,
-    val taskJournal: Journal
+    val taskJournal: Journal,
+    val goalID:Int
 )
