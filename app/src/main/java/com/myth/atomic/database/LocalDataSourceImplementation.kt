@@ -13,7 +13,7 @@ class LocalDataSourceImplementation(
     val taskDao: TaskDao
 ):LocalDataSource {
     override suspend fun AddGoal(goals: Goals) = goalDao.insertGoal(goals)
-    override suspend fun AppJournal(journal: Journal) =journalDao.insertJournal(journal)
+    override suspend fun AddJournal(journal: Journal) =journalDao.insertJournal(journal)
     override suspend fun AddReminder(reminder: Reminder) =reminderDao.insertReminder(reminder)
     override suspend fun AddTask(task: Task) =taskDao.insertTask(task)
 

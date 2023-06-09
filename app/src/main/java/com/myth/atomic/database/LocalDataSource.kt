@@ -9,7 +9,7 @@ import com.myth.atomic.model.Task
 
 interface LocalDataSource {
     suspend fun AddGoal(goals: Goals)
-    suspend fun AppJournal(journal: Journal)
+    suspend fun AddJournal(journal: Journal)
     suspend fun AddReminder(reminder: Reminder)
     suspend fun AddTask(task: Task)
     suspend fun editGoal(goals: Goals)
