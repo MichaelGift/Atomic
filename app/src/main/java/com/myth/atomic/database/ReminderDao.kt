@@ -20,5 +20,8 @@ interface ReminderDao {
     suspend fun updateReminder(reminder: Reminder)
 
     @Query("SELECT * FROM Reminders WHERE reminderTitle LIKE :query")
-    fun getAllReminders(query:String):LiveData<List<Reminder>>
+    fun searchReminders(query:String):LiveData<List<Reminder>>
+
+    @Query("SELECT * FROM Reminders ORDER BY id DESC")
+    fun getAllReminders():LiveData<List<Reminder>>
 }

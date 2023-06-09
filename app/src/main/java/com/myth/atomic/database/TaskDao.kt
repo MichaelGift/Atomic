@@ -20,5 +20,8 @@ interface TaskDao {
     suspend fun updateTask(task: Task)
 
     @Query("SELECT * FROM Tasks WHERE goalID LIKE :query")
-    fun getAllTasks(query:Int):LiveData<List<Task>>
+    fun searchTasks(query:Int):LiveData<List<Task>>
+
+    @Query("SELECT * FROM Tasks ORDER BY id DESC")
+    fun getAllTasks():LiveData<List<Task>>
 }
