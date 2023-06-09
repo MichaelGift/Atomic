@@ -31,5 +31,4 @@ interface Repository {
     fun getAllJournals():LiveData<List<Journal>>
     fun getAllReminders():LiveData<List<Reminder>>
     fun getAllTasks():LiveData<List<Task>>
-
 }
