@@ -1,13 +1,13 @@
-package com.myth.atomic.database
+package com.myth.atomic.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.myth.atomic.model.Goals
-import com.myth.atomic.model.Journal
-import com.myth.atomic.model.Reminder
-import com.myth.atomic.model.Task
+import com.myth.atomic.data.model.Goals
+import com.myth.atomic.data.model.Journal
+import com.myth.atomic.data.model.Reminder
+import com.myth.atomic.data.model.Task
 
 @Database(entities = [Goals::class, Reminder::class, Task::class, Journal::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {

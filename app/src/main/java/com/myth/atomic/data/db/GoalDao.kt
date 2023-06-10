@@ -1,4 +1,4 @@
-package com.myth.atomic.database
+package com.myth.atomic.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -7,7 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.myth.atomic.model.Goals
+import com.myth.atomic.data.model.Goals
 
 @Dao
 interface GoalDao {

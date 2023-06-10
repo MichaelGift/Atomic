@@ -1,17 +1,22 @@
-package com.myth.atomic.database
+package com.myth.atomic.data.datasourceimplementation
 
 import androidx.lifecycle.LiveData
-import com.myth.atomic.model.Goals
-import com.myth.atomic.model.Journal
-import com.myth.atomic.model.Reminder
-import com.myth.atomic.model.Task
+import com.myth.atomic.data.db.GoalDao
+import com.myth.atomic.data.db.JournalDao
+import com.myth.atomic.data.db.ReminderDao
+import com.myth.atomic.data.db.TaskDao
+import com.myth.atomic.data.datasource.LocalDataSource
+import com.myth.atomic.data.model.Goals
+import com.myth.atomic.data.model.Journal
+import com.myth.atomic.data.model.Reminder
+import com.myth.atomic.data.model.Task
 
 class LocalDataSourceImplementation(
     val goalDao: GoalDao,
     val journalDao: JournalDao,
     val reminderDao: ReminderDao,
     val taskDao: TaskDao
-):LocalDataSource {
+): LocalDataSource {
     override suspend fun AddGoal(goals: Goals) = goalDao.insertGoal(goals)
     override suspend fun AddJournal(journal: Journal) =journalDao.insertJournal(journal)
     override suspend fun AddReminder(reminder: Reminder) =reminderDao.insertReminder(reminder)

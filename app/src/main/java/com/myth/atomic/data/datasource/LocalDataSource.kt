@@ -1,11 +1,10 @@
-package com.myth.atomic.database
+package com.myth.atomic.data.datasource
 
 import androidx.lifecycle.LiveData
-import androidx.room.Query
-import com.myth.atomic.model.Goals
-import com.myth.atomic.model.Journal
-import com.myth.atomic.model.Reminder
-import com.myth.atomic.model.Task
+import com.myth.atomic.data.model.Goals
+import com.myth.atomic.data.model.Journal
+import com.myth.atomic.data.model.Reminder
+import com.myth.atomic.data.model.Task
 
 interface LocalDataSource {
     suspend fun AddGoal(goals: Goals)

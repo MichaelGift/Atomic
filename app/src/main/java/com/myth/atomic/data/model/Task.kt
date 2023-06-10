@@ -1,4 +1,4 @@
-package com.myth.atomic.model
+package com.myth.atomic.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

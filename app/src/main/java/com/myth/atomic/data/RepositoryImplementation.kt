@@ -1,10 +1,12 @@
-package com.myth.atomic.database
+package com.myth.atomic.data
 
 import androidx.lifecycle.LiveData
-import com.myth.atomic.model.Goals
-import com.myth.atomic.model.Journal
-import com.myth.atomic.model.Reminder
-import com.myth.atomic.model.Task
+import com.myth.atomic.data.datasource.LocalDataSource
+import com.myth.atomic.data.model.Goals
+import com.myth.atomic.data.model.Journal
+import com.myth.atomic.data.model.Reminder
+import com.myth.atomic.data.model.Task
+import com.myth.atomic.domain.repository.Repository
 
 class RepositoryImplementation(
     val localDataSource: LocalDataSource

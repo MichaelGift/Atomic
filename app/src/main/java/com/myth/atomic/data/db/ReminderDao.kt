@@ -1,4 +1,4 @@
-package com.myth.atomic.database
+package com.myth.atomic.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -6,7 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.myth.atomic.model.Reminder
+import com.myth.atomic.data.model.Reminder
 
 @Dao
 interface ReminderDao {
