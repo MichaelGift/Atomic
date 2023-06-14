@@ -3,7 +3,6 @@ package com.myth.atomic.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import com.myth.atomic.data.model.Goals
 import com.myth.atomic.data.model.Journal
 import com.myth.atomic.data.model.Reminder
@@ -16,6 +15,11 @@ import com.myth.atomic.domain.usecases.GetAllGoalsUseCase
 import com.myth.atomic.domain.usecases.GetAllJournalsUseCase
 import com.myth.atomic.domain.usecases.GetAllRemindersUseCase
 import com.myth.atomic.domain.usecases.GetAllTasksUseCase
+import com.myth.atomic.domain.usecases.UpdateGoalUseCase
+import com.myth.atomic.domain.usecases.UpdateJournalUseCase
+import com.myth.atomic.domain.usecases.UpdateReminderUseCase
+import com.myth.atomic.domain.usecases.UpdateTaskUseCase
+import kotlinx.coroutines.launch
 
 class AtomicViewModel(
     private val getAllGoalsUseCase: GetAllGoalsUseCase,
@@ -26,6 +30,10 @@ class AtomicViewModel(
     private val addJournalUseCase: AddJournalUseCase,
     private val addReminderUseCase: AddReminderUseCase,
     private val addTaskUseCase: AddTaskUseCase,
+    private val updateGoalUseCase: UpdateGoalUseCase,
+    private val updateJournalUseCase: UpdateJournalUseCase,
+    private val updateReminderUseCase: UpdateReminderUseCase,
+    private val updateTaskUseCase: UpdateTaskUseCase,
 ) : ViewModel() {
     fun GetAllGoals() = liveData {
         val goalsList = getAllGoalsUseCase.execute()
@@ -44,17 +52,29 @@ class AtomicViewModel(
         emit(tasksList)
     }
 
-    fun AddGoal(goal: Goals) = viewModelScope.launch{
+    fun AddGoal(goal: Goals) = viewModelScope.launch {
         addGoalUseCase.execute(goal)
     }
     fun AddJournalEntry(journal: Journal) = viewModelScope.launch {
         addJournalUseCase.execute(journal)
     }
-    fun AddReminder(reminder: Reminder) =viewModelScope.launch {
+    fun AddReminder(reminder: Reminder) = viewModelScope.launch {
         addReminderUseCase.execute(reminder)
     }
-    fun AddTask(task: Task) =viewModelScope.launch {
+    fun AddTask(task: Task) = viewModelScope.launch {
         addTaskUseCase.execute(task)
     }
 
+    fun UpdateGoal(goal: Goals) = viewModelScope.launch {
+        updateGoalUseCase.execute(goal)
+    }
+    fun UpdateJournal(journal: Journal) = viewModelScope.launch {
+        updateJournalUseCase.execute(journal)
+    }
+    fun UpdateReminder(reminder: Reminder) = viewModelScope.launch {
+        updateReminderUseCase.execute(reminder)
+    }
+    fun UpdateTask(task: Task) = viewModelScope.launch {
+        updateTaskUseCase.execute(task)
+    }
 }
