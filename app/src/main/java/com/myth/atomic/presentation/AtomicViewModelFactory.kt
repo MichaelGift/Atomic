@@ -2,26 +2,7 @@ package com.myth.atomic.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.myth.atomic.domain.usecases.AddGoalUseCase
-import com.myth.atomic.domain.usecases.AddJournalUseCase
-import com.myth.atomic.domain.usecases.AddReminderUseCase
-import com.myth.atomic.domain.usecases.AddTaskUseCase
-import com.myth.atomic.domain.usecases.DeleteGoalsUseCase
-import com.myth.atomic.domain.usecases.DeleteJournalUseCase
-import com.myth.atomic.domain.usecases.DeleteReminderUseCase
-import com.myth.atomic.domain.usecases.DeleteTaskUseCase
-import com.myth.atomic.domain.usecases.GetAllGoalsUseCase
-import com.myth.atomic.domain.usecases.GetAllJournalsUseCase
-import com.myth.atomic.domain.usecases.GetAllRemindersUseCase
-import com.myth.atomic.domain.usecases.GetAllTasksUseCase
-import com.myth.atomic.domain.usecases.SearchGoalsUseCase
-import com.myth.atomic.domain.usecases.SearchJournalsUseCase
-import com.myth.atomic.domain.usecases.SearchRemindersUseCase
-import com.myth.atomic.domain.usecases.SearchTasksUseCase
-import com.myth.atomic.domain.usecases.UpdateGoalUseCase
-import com.myth.atomic.domain.usecases.UpdateJournalUseCase
-import com.myth.atomic.domain.usecases.UpdateReminderUseCase
-import com.myth.atomic.domain.usecases.UpdateTaskUseCase
+import com.myth.atomic.domain.usecases.*
 
 class AtomicViewModelFactory(
     private val getAllGoalsUseCase: GetAllGoalsUseCase,
