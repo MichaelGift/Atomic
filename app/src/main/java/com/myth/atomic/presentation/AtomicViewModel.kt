@@ -19,6 +19,10 @@ import com.myth.atomic.domain.usecases.GetAllGoalsUseCase
 import com.myth.atomic.domain.usecases.GetAllJournalsUseCase
 import com.myth.atomic.domain.usecases.GetAllRemindersUseCase
 import com.myth.atomic.domain.usecases.GetAllTasksUseCase
+import com.myth.atomic.domain.usecases.SearchGoalsUseCase
+import com.myth.atomic.domain.usecases.SearchJournalsUseCase
+import com.myth.atomic.domain.usecases.SearchRemindersUseCase
+import com.myth.atomic.domain.usecases.SearchTasksUseCase
 import com.myth.atomic.domain.usecases.UpdateGoalUseCase
 import com.myth.atomic.domain.usecases.UpdateJournalUseCase
 import com.myth.atomic.domain.usecases.UpdateReminderUseCase
@@ -42,6 +46,10 @@ class AtomicViewModel(
     private val deleteJournalUseCase: DeleteJournalUseCase,
     private val deleteReminderUseCase: DeleteReminderUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val searchGoalsUseCase: SearchGoalsUseCase,
+    private val searchJournalsUseCase: SearchJournalsUseCase,
+    private val searchRemindersUseCase: SearchRemindersUseCase,
+    private val searchTasksUseCase: SearchTasksUseCase,
 ) : ViewModel() {
     fun GetAllGoals() = liveData {
         val goalsList = getAllGoalsUseCase.execute()
@@ -97,5 +105,18 @@ class AtomicViewModel(
     }
     fun DeleteTask(task: Task) = viewModelScope.launch {
         deleteTaskUseCase.execute(task)
+    }
+
+    fun SearchGoal(query: String) = viewModelScope.launch {
+        searchGoalsUseCase.execute(query)
+    }
+    fun SearchJournal(query: String) =viewModelScope.launch {
+        searchJournalsUseCase.execute(query)
+    }
+    fun SearchReminders(query: String) =viewModelScope.launch {
+        searchRemindersUseCase.execute(query)
+    }
+    fun SearchTask(query: Int) = viewModelScope.launch {
+        searchTasksUseCase.execute(query)
     }
 }
