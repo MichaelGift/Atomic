@@ -11,6 +11,10 @@ import com.myth.atomic.domain.usecases.AddGoalUseCase
 import com.myth.atomic.domain.usecases.AddJournalUseCase
 import com.myth.atomic.domain.usecases.AddReminderUseCase
 import com.myth.atomic.domain.usecases.AddTaskUseCase
+import com.myth.atomic.domain.usecases.DeleteGoalsUseCase
+import com.myth.atomic.domain.usecases.DeleteJournalUseCase
+import com.myth.atomic.domain.usecases.DeleteReminderUseCase
+import com.myth.atomic.domain.usecases.DeleteTaskUseCase
 import com.myth.atomic.domain.usecases.GetAllGoalsUseCase
 import com.myth.atomic.domain.usecases.GetAllJournalsUseCase
 import com.myth.atomic.domain.usecases.GetAllRemindersUseCase
@@ -34,6 +38,10 @@ class AtomicViewModel(
     private val updateJournalUseCase: UpdateJournalUseCase,
     private val updateReminderUseCase: UpdateReminderUseCase,
     private val updateTaskUseCase: UpdateTaskUseCase,
+    private val deleteGoalsUseCase: DeleteGoalsUseCase,
+    private val deleteJournalUseCase: DeleteJournalUseCase,
+    private val deleteReminderUseCase: DeleteReminderUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
 ) : ViewModel() {
     fun GetAllGoals() = liveData {
         val goalsList = getAllGoalsUseCase.execute()
@@ -76,5 +84,18 @@ class AtomicViewModel(
     }
     fun UpdateTask(task: Task) = viewModelScope.launch {
         updateTaskUseCase.execute(task)
+    }
+
+    fun DeleteGoal(goal: Goals) = viewModelScope.launch {
+        deleteGoalsUseCase.execute(goal)
+    }
+    fun DeleteJournal(journal: Journal) = viewModelScope.launch {
+        deleteJournalUseCase.execute(journal)
+    }
+    fun DeleteReminder(reminder: Reminder) = viewModelScope.launch {
+        deleteReminderUseCase.execute(reminder)
+    }
+    fun DeleteTask(task: Task) = viewModelScope.launch {
+        deleteTaskUseCase.execute(task)
     }
 }
