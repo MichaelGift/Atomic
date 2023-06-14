@@ -3,30 +3,8 @@ package com.myth.atomic.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.myth.atomic.data.model.Goals
-import com.myth.atomic.data.model.Journal
-import com.myth.atomic.data.model.Reminder
-import com.myth.atomic.data.model.Task
-import com.myth.atomic.domain.usecases.AddGoalUseCase
-import com.myth.atomic.domain.usecases.AddJournalUseCase
-import com.myth.atomic.domain.usecases.AddReminderUseCase
-import com.myth.atomic.domain.usecases.AddTaskUseCase
-import com.myth.atomic.domain.usecases.DeleteGoalsUseCase
-import com.myth.atomic.domain.usecases.DeleteJournalUseCase
-import com.myth.atomic.domain.usecases.DeleteReminderUseCase
-import com.myth.atomic.domain.usecases.DeleteTaskUseCase
-import com.myth.atomic.domain.usecases.GetAllGoalsUseCase
-import com.myth.atomic.domain.usecases.GetAllJournalsUseCase
-import com.myth.atomic.domain.usecases.GetAllRemindersUseCase
-import com.myth.atomic.domain.usecases.GetAllTasksUseCase
-import com.myth.atomic.domain.usecases.SearchGoalsUseCase
-import com.myth.atomic.domain.usecases.SearchJournalsUseCase
-import com.myth.atomic.domain.usecases.SearchRemindersUseCase
-import com.myth.atomic.domain.usecases.SearchTasksUseCase
-import com.myth.atomic.domain.usecases.UpdateGoalUseCase
-import com.myth.atomic.domain.usecases.UpdateJournalUseCase
-import com.myth.atomic.domain.usecases.UpdateReminderUseCase
-import com.myth.atomic.domain.usecases.UpdateTaskUseCase
+import com.myth.atomic.data.model.*
+import com.myth.atomic.domain.usecases.*
 import kotlinx.coroutines.launch
 
 class AtomicViewModel(
@@ -110,10 +88,10 @@ class AtomicViewModel(
     fun SearchGoal(query: String) = viewModelScope.launch {
         searchGoalsUseCase.execute(query)
     }
-    fun SearchJournal(query: String) =viewModelScope.launch {
+    fun SearchJournal(query: String) = viewModelScope.launch {
         searchJournalsUseCase.execute(query)
     }
-    fun SearchReminders(query: String) =viewModelScope.launch {
+    fun SearchReminders(query: String) = viewModelScope.launch {
         searchRemindersUseCase.execute(query)
     }
     fun SearchTask(query: Int) = viewModelScope.launch {
