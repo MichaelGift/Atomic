@@ -88,7 +88,13 @@
     <!-- Widget -->
     <string name="widget_description">Tasks due today and your streak</string>
     <string name="widget_all_clear">All clear for today.</string>
-    <string name="widget_more">+%1$d more</string>
+    <plurals name="widget_more">
+        <item quantity="one">+%1$d more task</item>
+        <item quantity="other">+%1$d more tasks</item>
+    </plurals>
+    <string name="widget_preview_task_1">Book a physio session</string>
+    <string name="widget_preview_task_2">Easy 5k run</string>
+    <string name="widget_preview_task_3">Read chapter 4</string>
     <plurals name="widget_streak">
         <item quantity="one">%1$d-day streak</item>
         <item quantity="other">%1$d-day streak</item>

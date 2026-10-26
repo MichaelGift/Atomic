@@ -35,6 +35,10 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        // Version-bump checks depend on the network and would make CI results drift.
+        disable += "NewerVersionAvailable"
+    }
     testOptions {
         unitTests.isIncludeAndroidResources = true
         // Robolectric's FileDescriptor interceptor needs JDK internals on Java 21.

@@ -26,7 +26,9 @@ fun TaskRow(
     onDelete: (() -> Unit)? = null,
 ) {
     val dueDate = task.dueAt?.toLocalDate()
-    val supporting = listOfNotNull(goalTitle, dueDate?.let { dueLabel(it, today) }).joinToString(" · ")
+    // A finished task is never overdue; just show when it was due.
+    val dueText = dueDate?.let { if (task.isCompleted) stringResource(R.string.due_on, it.formatMedium()) else dueLabel(it, today) }
+    val supporting = listOfNotNull(goalTitle, dueText).joinToString(" · ")
     val overdue = !task.isCompleted && dueDate != null && dueDate.isBefore(today)
 
     ListItem(

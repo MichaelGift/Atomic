@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -29,7 +30,6 @@ import com.myth.atomic.domain.stats.ProgressStats
 import com.myth.atomic.presentation.theme.AtomicTheme
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.util.Locale
 
 @Composable
 fun ProgressCard(stats: ProgressStats, modifier: Modifier = Modifier) {
@@ -64,7 +64,7 @@ private fun StatBlock(value: String, label: String, modifier: Modifier = Modifie
 @Composable
 private fun WeekBars(days: List<DayCount>) {
     val max = days.maxOfOrNull { it.count }?.coerceAtLeast(1) ?: 1
-    val locale = Locale.getDefault()
+    val locale = LocalConfiguration.current.locales[0]
     val summary = days.joinToString { day ->
         "${day.date.dayOfWeek.getDisplayName(TextStyle.SHORT, locale)} ${day.count}"
     }

@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import com.myth.atomic.MainActivity
 import com.myth.atomic.R
 import com.myth.atomic.domain.reminders.ReminderNotification
@@ -28,7 +28,7 @@ class SystemReminderNotifier @Inject constructor(
         if (!notificationManager.areNotificationsEnabled()) return
 
         val openIntent = if (notification.goalId != null) {
-            Intent(Intent.ACTION_VIEW, Uri.parse("$GOAL_DEEP_LINK_BASE/${notification.goalId}"), context, MainActivity::class.java)
+            Intent(Intent.ACTION_VIEW, "$GOAL_DEEP_LINK_BASE/${notification.goalId}".toUri(), context, MainActivity::class.java)
         } else {
             Intent(context, MainActivity::class.java)
         }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
