@@ -16,16 +16,33 @@ android {
         // 26+ gives us java.time without core library desugaring.
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        // The release workflow passes the tag's version (-PversionName=1.2.0 -PversionCode=104);
+        // local builds fall back to these.
+        versionCode = providers.gradleProperty("versionCode").map(String::toInt).getOrElse(1)
+        versionName = providers.gradleProperty("versionName").getOrElse("1.0")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Release signing comes from the environment (set by the release workflow from repository
+    // secrets). Without KEYSTORE_PATH, release builds are left unsigned rather than failing.
+    val releaseKeystore = providers.environmentVariable("KEYSTORE_PATH").orNull
+    signingConfigs {
+        if (releaseKeystore != null) {
+            create("release") {
+                storeFile = file(releaseKeystore)
+                storePassword = providers.environmentVariable("KEYSTORE_PASSWORD").get()
+                keyAlias = providers.environmentVariable("KEY_ALIAS").get()
+                keyPassword = providers.environmentVariable("KEY_PASSWORD").get()
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (releaseKeystore != null) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
