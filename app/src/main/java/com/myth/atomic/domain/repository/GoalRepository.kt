@@ -10,6 +10,7 @@ interface GoalRepository {
     fun observeGoalDetails(goalId: Long): Flow<GoalDetails?>
     fun searchGoals(query: String): Flow<List<Goal>>
 
+    suspend fun getGoal(goalId: Long): Goal?
     suspend fun addGoal(goal: Goal): Long
     suspend fun updateGoal(goal: Goal)
     suspend fun setGoalCompleted(goalId: Long, completed: Boolean)

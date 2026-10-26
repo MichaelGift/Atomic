@@ -2,6 +2,9 @@ package com.myth.atomic.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
+/** Reminder notifications open goals through `atomic://goal/{goalId}`. */
+const val GOAL_DEEP_LINK_BASE = "atomic://goal"
+
 @Serializable
 data object TodayRoute
 

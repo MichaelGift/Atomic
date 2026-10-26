@@ -25,6 +25,9 @@ interface GoalDao {
     @Query("DELETE FROM goals WHERE id = :goalId")
     suspend fun deleteById(goalId: Long)
 
+    @Query("SELECT * FROM goals WHERE id = :goalId")
+    suspend fun getById(goalId: Long): GoalEntity?
+
     // Open goals first, newest first within each group.
     @Query(
         """

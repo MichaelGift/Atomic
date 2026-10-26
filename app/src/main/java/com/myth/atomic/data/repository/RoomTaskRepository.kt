@@ -22,6 +22,10 @@ class RoomTaskRepository @Inject constructor(
     override fun searchTasks(query: String): Flow<List<Task>> =
         taskDao.search(query).map { rows -> rows.map { it.toDomain() } }
 
+    override fun observeCompletionTimes(): Flow<List<Instant>> = taskDao.observeCompletionTimes()
+
+    override suspend fun getTask(taskId: Long): Task? = taskDao.getById(taskId)?.toDomain()
+
     override suspend fun addTask(task: Task): Long = taskDao.insert(task.toEntity())
 
     override suspend fun updateTask(task: Task) = taskDao.update(task.toEntity())

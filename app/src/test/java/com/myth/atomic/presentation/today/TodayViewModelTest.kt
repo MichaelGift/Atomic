@@ -2,6 +2,7 @@ package com.myth.atomic.presentation.today
 
 import com.myth.atomic.domain.model.Goal
 import com.myth.atomic.domain.model.Task
+import com.myth.atomic.domain.stats.ObserveProgressStatsUseCase
 import com.myth.atomic.testing.FakeAtomicRepository
 import com.myth.atomic.testing.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +36,7 @@ class TodayViewModelTest {
         repository.addTask(task(goalId, "Tomorrow", now.plus(Duration.ofDays(1))))
         repository.addTask(task(goalId, "Someday", null))
 
-        val viewModel = TodayViewModel(repository, repository, clock)
+        val viewModel = TodayViewModel(repository, repository, ObserveProgressStatsUseCase(repository, clock), clock)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
 
         val state = viewModel.uiState.value
@@ -50,7 +51,7 @@ class TodayViewModelTest {
         val goalId = repository.addGoal(Goal(title = "Run a 10k", createdAt = now))
         val taskId = repository.addTask(task(goalId, "Easy 5k", now))
 
-        val viewModel = TodayViewModel(repository, repository, clock)
+        val viewModel = TodayViewModel(repository, repository, ObserveProgressStatsUseCase(repository, clock), clock)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
 
         viewModel.setTaskCompleted(taskId, true)
@@ -58,6 +59,21 @@ class TodayViewModelTest {
 
         viewModel.setTaskCompleted(taskId, false)
         assertEquals(1, viewModel.uiState.value.dueToday.size)
+    }
+
+    @Test
+    fun includesStreakFromCompletedTasks() = runTest {
+        val goalId = repository.addGoal(Goal(title = "Run a 10k", createdAt = now))
+        repository.addTask(task(goalId, "Yesterday", null).copy(completedAt = now.minus(Duration.ofDays(1))))
+        val todayId = repository.addTask(task(goalId, "Today", now))
+
+        val viewModel = TodayViewModel(repository, repository, ObserveProgressStatsUseCase(repository, clock), clock)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
+        assertEquals(1, viewModel.uiState.value.stats?.currentStreak)
+
+        viewModel.setTaskCompleted(todayId, true)
+        assertEquals(2, viewModel.uiState.value.stats?.currentStreak)
+        assertEquals(2, viewModel.uiState.value.stats?.completedThisWeek)
     }
 
     private fun task(goalId: Long, title: String, dueAt: Instant?) =

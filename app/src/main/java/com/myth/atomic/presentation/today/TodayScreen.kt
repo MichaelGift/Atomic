@@ -31,9 +31,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.myth.atomic.R
 import com.myth.atomic.domain.model.Task
+import com.myth.atomic.domain.stats.DayCount
+import com.myth.atomic.domain.stats.ProgressStats
 import com.myth.atomic.presentation.components.EmptyState
 import com.myth.atomic.presentation.components.TaskRow
 import com.myth.atomic.presentation.components.formatFull
@@ -49,6 +52,10 @@ fun TodayScreen(
     viewModel: TodayViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    LifecycleResumeEffect(viewModel) {
+        viewModel.refreshDate()
+        onPauseOrDispose {}
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val completedMessage = stringResource(R.string.today_task_completed)
@@ -91,20 +98,28 @@ fun TodayContent(
             state.isLoading -> Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
-            state.isEmpty -> EmptyState(
-                icon = Icons.Default.CheckCircle,
-                title = stringResource(R.string.today_empty_title),
-                message = stringResource(R.string.today_empty_message),
-                modifier = Modifier.padding(padding),
-            )
             else -> LazyColumn(Modifier.fillMaxSize(), contentPadding = padding) {
-                item {
+                item(key = "date") {
                     Text(
                         state.date.formatFull(),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
+                }
+                state.stats?.let { stats ->
+                    item(key = "progress") {
+                        ProgressCard(stats, Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+                    }
+                }
+                if (state.isEmpty) {
+                    item(key = "empty") {
+                        EmptyState(
+                            icon = Icons.Default.CheckCircle,
+                            title = stringResource(R.string.today_empty_title),
+                            message = stringResource(R.string.today_empty_message),
+                        )
+                    }
                 }
                 taskSection(R.string.today_section_overdue, state.overdue, state.date, onCompleteTask, onOpenGoal)
                 taskSection(R.string.today_section_due, state.dueToday, state.date, onCompleteTask, onOpenGoal)
@@ -157,6 +172,7 @@ private fun TodayContentPreview() {
                     TaskWithGoal(Task(2, 1, "Easy 5k run", dueAt = today.startOfDay(zone)), "Run a 10k"),
                     TaskWithGoal(Task(3, 2, "Read chapter 4", dueAt = today.startOfDay(zone)), "Read 12 books"),
                 ),
+                stats = ProgressStats(4, 9, listOf(0, 2, 1, 3, 1, 2, 1).mapIndexed { i, n -> DayCount(today.minusDays(6L - i), n) }),
             ),
             onCompleteTask = {},
             onOpenGoal = {},

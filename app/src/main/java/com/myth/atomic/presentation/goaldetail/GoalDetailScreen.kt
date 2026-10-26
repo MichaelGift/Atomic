@@ -1,5 +1,10 @@
 package com.myth.atomic.presentation.goaldetail
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +37,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -39,21 +46,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.myth.atomic.R
 import com.myth.atomic.domain.model.Goal
 import com.myth.atomic.domain.model.GoalDetails
 import com.myth.atomic.domain.model.JournalEntry
+import com.myth.atomic.domain.model.Reminder
+import com.myth.atomic.domain.model.RepeatInterval
 import com.myth.atomic.domain.model.Task
 import com.myth.atomic.presentation.components.DatePickerButton
 import com.myth.atomic.presentation.components.TaskRow
@@ -63,10 +76,11 @@ import com.myth.atomic.presentation.components.toLocalDate
 import com.myth.atomic.presentation.goals.GoalEditorDialog
 import com.myth.atomic.presentation.goals.taskProgressLabel
 import com.myth.atomic.presentation.theme.AtomicTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 
-private enum class GoalDialog { None, EditGoal, AddTask, ConfirmDelete }
+private enum class GoalDialog { None, EditGoal, AddTask, AddReminder, ConfirmDelete }
 
 @Composable
 fun GoalDetailScreen(
@@ -77,6 +91,21 @@ fun GoalDetailScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var dialog by rememberSaveable { mutableStateOf(GoalDialog.None) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val notificationsOff = stringResource(R.string.reminder_notifications_off)
+
+    // Reminders are useless without notifications, so ask the first time one is added.
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        dialog = GoalDialog.AddReminder
+        if (!granted) scope.launch { snackbarHostState.showSnackbar(notificationsOff) }
+    }
+    val onAddReminder = {
+        val needsPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        if (needsPermission) permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) else dialog = GoalDialog.AddReminder
+    }
 
     LaunchedEffect(state) {
         if (state == GoalDetailUiState.NotFound) onBack()
@@ -91,8 +120,11 @@ fun GoalDetailScreen(
         onAddTask = { dialog = GoalDialog.AddTask },
         onSetTaskCompleted = viewModel::setTaskCompleted,
         onDeleteTask = viewModel::deleteTask,
+        onAddReminder = onAddReminder,
+        onDeleteReminder = viewModel::deleteReminder,
         onWriteEntry = onWriteEntry,
         onOpenEntry = onOpenEntry,
+        snackbarHostState = snackbarHostState,
     )
 
     val loaded = state as? GoalDetailUiState.Loaded ?: return
@@ -113,6 +145,14 @@ fun GoalDetailScreen(
             onDismiss = { dialog = GoalDialog.None },
             onSave = { title, due ->
                 viewModel.addTask(title, due)
+                dialog = GoalDialog.None
+            },
+        )
+        GoalDialog.AddReminder -> AddReminderDialog(
+            defaultTitle = goal.title,
+            onDismiss = { dialog = GoalDialog.None },
+            onSave = { title, date, time, repeat ->
+                viewModel.addReminder(title, date, time, repeat)
                 dialog = GoalDialog.None
             },
         )
@@ -144,8 +184,11 @@ fun GoalDetailContent(
     onAddTask: () -> Unit,
     onSetTaskCompleted: (taskId: Long, completed: Boolean) -> Unit,
     onDeleteTask: (taskId: Long) -> Unit,
+    onAddReminder: () -> Unit,
+    onDeleteReminder: (reminderId: Long) -> Unit,
     onWriteEntry: (goalId: Long) -> Unit,
     onOpenEntry: (entryId: Long) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val loaded = state as? GoalDetailUiState.Loaded
     Scaffold(
@@ -176,6 +219,7 @@ fun GoalDetailContent(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         if (loaded == null) {
             Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
@@ -205,6 +249,18 @@ fun GoalDetailContent(
                     onDelete = { onDeleteTask(task.id) },
                     modifier = Modifier.animateItem(),
                 )
+            }
+
+            item(key = "reminders-header") {
+                SectionHeader(stringResource(R.string.goal_section_reminders)) {
+                    TextButton(onClick = onAddReminder) { Text(stringResource(R.string.reminder_add_short)) }
+                }
+            }
+            if (details.reminders.isEmpty()) {
+                item(key = "reminders-empty") { HintText(stringResource(R.string.goal_reminders_empty)) }
+            }
+            items(details.reminders, key = { "reminder-${it.id}" }) { reminder ->
+                ReminderRow(reminder, onDelete = { onDeleteReminder(reminder.id) }, modifier = Modifier.animateItem())
             }
 
             item(key = "journal-header") {
@@ -351,7 +407,7 @@ private fun GoalDetailPreview() {
                         Task(2, 1, "Easy 5k run", dueAt = now, createdAt = now),
                         Task(3, 1, "Sign up for the race", dueAt = today.plusDays(3).startOfDay(zone), createdAt = now),
                     ),
-                    reminders = emptyList(),
+                    reminders = listOf(Reminder(1, "Run a 10k", today.startOfDay(zone).plusSeconds(7 * 3600), RepeatInterval.DAILY, goalId = 1)),
                     journalEntries = listOf(JournalEntry(1, "First run", "Harder than expected.", createdAt = now, goalId = 1)),
                 ),
                 today = today,
@@ -363,6 +419,8 @@ private fun GoalDetailPreview() {
             onAddTask = {},
             onSetTaskCompleted = { _, _ -> },
             onDeleteTask = {},
+            onAddReminder = {},
+            onDeleteReminder = {},
             onWriteEntry = {},
             onOpenEntry = {},
         )

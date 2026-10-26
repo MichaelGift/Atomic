@@ -16,6 +16,10 @@ class RoomReminderRepository @Inject constructor(
     override fun searchReminders(query: String): Flow<List<Reminder>> =
         reminderDao.search(query).map { rows -> rows.map { it.toDomain() } }
 
+    override suspend fun getReminder(reminderId: Long): Reminder? = reminderDao.getById(reminderId)?.toDomain()
+
+    override suspend fun getAllReminders(): List<Reminder> = reminderDao.getAll().map { it.toDomain() }
+
     override suspend fun addReminder(reminder: Reminder): Long = reminderDao.insert(reminder.toEntity())
 
     override suspend fun updateReminder(reminder: Reminder) = reminderDao.update(reminder.toEntity())
