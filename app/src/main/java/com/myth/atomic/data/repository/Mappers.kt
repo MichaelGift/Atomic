@@ -20,6 +20,7 @@ internal fun GoalEntity.toDomain() = Goal(
     deadline = deadline,
     createdAt = createdAt,
     completedAt = completedAt,
+    colorIndex = colorIndex,
 )
 
 internal fun Goal.toEntity() = GoalEntity(
@@ -29,6 +30,7 @@ internal fun Goal.toEntity() = GoalEntity(
     deadline = deadline,
     createdAt = createdAt,
     completedAt = completedAt,
+    colorIndex = colorIndex,
 )
 
 internal fun GoalWithTaskCounts.toDomain() = GoalWithProgress(

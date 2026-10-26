@@ -69,10 +69,11 @@ class GoalDetailViewModelTest {
         val viewModel = viewModel(goalId)
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect {} }
 
-        viewModel.updateGoal("Run a half marathon", "", deadline = null)
+        viewModel.updateGoal("Run a half marathon", "", deadline = null, colorIndex = 2)
 
         val goal = repository.goals.value.single()
         assertEquals("Run a half marathon", goal.title)
+        assertEquals(2, goal.colorIndex)
         assertEquals(now, goal.createdAt)
         assertEquals(now, goal.completedAt)
     }

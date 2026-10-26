@@ -14,7 +14,18 @@ import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
+import androidx.compose.ui.graphics.Color
+import androidx.glance.ColorFilter
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.appwidget.CheckBox
+import androidx.glance.appwidget.CheckboxDefaults
+import androidx.glance.appwidget.LinearProgressIndicator
+import androidx.glance.color.ColorProvider
+import androidx.glance.layout.size
+import androidx.glance.material3.ColorProviders
+import com.myth.atomic.presentation.theme.DarkColors
+import com.myth.atomic.presentation.theme.LightColors
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
@@ -49,7 +60,7 @@ class AtomicWidget : GlanceAppWidget() {
             // Live while the Glance session runs; later changes reach the widget through
             // AtomicApplication calling updateAll, which starts a new session.
             val state by dataSource.observe().collectAsState(initial)
-            GlanceTheme {
+            GlanceTheme(colors = WidgetColors) {
                 WidgetContent(state)
             }
         }
@@ -65,9 +76,10 @@ class AtomicWidget : GlanceAppWidget() {
             ),
             totalDue = 3,
             streak = 6,
+            doneToday = 2,
         )
         provideContent {
-            GlanceTheme {
+            GlanceTheme(colors = WidgetColors) {
                 WidgetContent(sample)
             }
         }
@@ -90,32 +102,49 @@ class CompleteTaskAction : ActionCallback {
     }
 }
 
+private val WidgetColors = ColorProviders(light = LightColors, dark = DarkColors)
+private val Accent = ColorProvider(day = Color(0xFFD4FF3F), night = Color(0xFFD4FF3F))
+private val AccentText = ColorProvider(day = Color(0xFF141518), night = Color(0xFFD4FF3F))
+
 @Composable
 private fun WidgetContent(state: WidgetState) {
     val context = LocalContext.current
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(GlanceTheme.colors.widgetBackground)
-            .cornerRadius(16.dp)
-            .padding(12.dp),
+            .background(GlanceTheme.colors.surface)
+            .cornerRadius(24.dp)
+            .padding(16.dp),
     ) {
         Row(
             modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivity<MainActivity>()),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            Image(
+                provider = ImageProvider(R.drawable.ic_atom),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(AccentText),
+                modifier = GlanceModifier.size(18.dp),
+            )
             Text(
                 context.getString(R.string.nav_today),
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp, color = GlanceTheme.colors.onSurface),
-                modifier = GlanceModifier.defaultWeight(),
+                modifier = GlanceModifier.defaultWeight().padding(start = 8.dp),
             )
             if (state.streak > 0) {
                 Text(
                     context.resources.getQuantityString(R.plurals.widget_streak, state.streak, state.streak),
-                    style = TextStyle(fontSize = 13.sp, color = GlanceTheme.colors.primary),
+                    style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = GlanceTheme.colors.secondary),
                 )
             }
         }
+        Spacer(GlanceModifier.height(10.dp))
+        LinearProgressIndicator(
+            progress = state.dayProgress,
+            color = Accent,
+            backgroundColor = GlanceTheme.colors.surfaceVariant,
+            modifier = GlanceModifier.fillMaxWidth().height(6.dp).cornerRadius(3.dp),
+        )
         Spacer(GlanceModifier.height(8.dp))
         if (state.tasks.isEmpty()) {
             Text(
@@ -134,8 +163,9 @@ private fun WidgetContent(state: WidgetState) {
                         text = task.title,
                         style = TextStyle(
                             fontSize = 14.sp,
-                            color = if (task.isOverdue) GlanceTheme.colors.error else GlanceTheme.colors.onSurface,
+                            color = if (task.isOverdue) GlanceTheme.colors.secondary else GlanceTheme.colors.onSurface,
                         ),
+                        colors = CheckboxDefaults.colors(checkedColor = Accent, uncheckedColor = GlanceTheme.colors.onSurfaceVariant),
                         maxLines = 1,
                     )
                 }

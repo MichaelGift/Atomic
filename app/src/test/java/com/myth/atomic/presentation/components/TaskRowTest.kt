@@ -37,7 +37,7 @@ class TaskRowTest {
 
     private fun render(task: Task) {
         composeRule.setContent {
-            AtomicTheme(dynamicColor = false) {
+            AtomicTheme {
                 TaskRow(task = task, today = today, onCheckedChange = {})
             }
         }

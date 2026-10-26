@@ -15,7 +15,9 @@ import javax.inject.Inject
 
 data class WidgetTask(val id: Long, val title: String, val goalTitle: String, val isOverdue: Boolean)
 
-data class WidgetState(val tasks: List<WidgetTask>, val totalDue: Int, val streak: Int)
+data class WidgetState(val tasks: List<WidgetTask>, val totalDue: Int, val streak: Int, val doneToday: Int = 0) {
+    val dayProgress: Float get() = (doneToday + totalDue).let { if (it == 0) 0f else doneToday.toFloat() / it }
+}
 
 class WidgetDataSource @Inject constructor(
     private val taskRepository: TaskRepository,
@@ -39,6 +41,7 @@ class WidgetDataSource @Inject constructor(
                 },
                 totalDue = tasks.size,
                 streak = stats.currentStreak,
+                doneToday = stats.completedToday,
             )
         }
     }

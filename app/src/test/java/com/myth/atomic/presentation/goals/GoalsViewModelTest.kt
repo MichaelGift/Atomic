@@ -42,12 +42,13 @@ class GoalsViewModelTest {
     fun addGoalTrimsInputAndStoresDeadlineAtLocalStartOfDay() = runTest {
         val viewModel = GoalsViewModel(repository, clock)
 
-        viewModel.addGoal("  Read 12 books ", " One a month ", LocalDate.of(2026, 12, 31))
+        viewModel.addGoal("  Read 12 books ", " One a month ", LocalDate.of(2026, 12, 31), colorIndex = 4)
 
         val goal = repository.goals.value.single()
         assertEquals("Read 12 books", goal.title)
         assertEquals("One a month", goal.description)
         assertEquals(LocalDate.of(2026, 12, 31).atStartOfDay(zone).toInstant(), goal.deadline)
         assertEquals(now, goal.createdAt)
+        assertEquals(4, goal.colorIndex)
     }
 }

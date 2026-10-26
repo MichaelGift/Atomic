@@ -1,5 +1,6 @@
 package com.myth.atomic.data.local
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -14,8 +15,12 @@ import com.myth.atomic.data.local.entity.TaskEntity
 
 @Database(
     entities = [GoalEntity::class, TaskEntity::class, ReminderEntity::class, JournalEntryEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true,
+    autoMigrations = [
+        // 2: goals gain a color.
+        AutoMigration(from = 1, to = 2),
+    ],
 )
 @TypeConverters(Converters::class)
 abstract class AtomicDatabase : RoomDatabase() {

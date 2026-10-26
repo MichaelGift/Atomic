@@ -25,7 +25,7 @@ class TodayContentTest {
     @Test
     fun showsEmptyStateWhenNothingIsDue() {
         composeRule.setContent {
-            AtomicTheme(dynamicColor = false) {
+            AtomicTheme {
                 TodayContent(TodayUiState(date = today, isLoading = false), onCompleteTask = {}, onOpenGoal = {})
             }
         }
@@ -38,7 +38,7 @@ class TodayContentTest {
         var completed: Long? = null
         val dueAt = today.atStartOfDay(ZoneId.systemDefault()).toInstant()
         composeRule.setContent {
-            AtomicTheme(dynamicColor = false) {
+            AtomicTheme {
                 TodayContent(
                     TodayUiState(
                         date = today,
@@ -52,7 +52,8 @@ class TodayContentTest {
         }
 
         composeRule.onNodeWithText("Easy 5k").assertIsDisplayed()
-        composeRule.onNodeWithText("Run a 10k · Due today").assertIsDisplayed()
+        composeRule.onNodeWithText("Run a 10k").assertIsDisplayed()
+        composeRule.onNodeWithText("Due today").assertIsDisplayed()
         composeRule.onAllNodes(isToggleable())[0].performClick()
 
         assertEquals(7L, completed)

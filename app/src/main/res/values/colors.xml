@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window and launcher colors; in-app colors live in presentation/theme/Color.kt. -->
+    <color name="ink">#FF0D0E10</color>
+    <color name="paper">#FFF5F4EF</color>
+    <color name="window_background">@color/paper</color>
+</resources>

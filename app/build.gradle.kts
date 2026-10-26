@@ -35,6 +35,11 @@ android {
     buildFeatures {
         compose = true
     }
+    sourceSets {
+        // MigrationTestHelper reads the exported schemas as assets. Robolectric only sees the
+        // app's merged assets, so they ride along in debug builds (a few KB; never in release).
+        getByName("debug").assets.directories.add("$projectDir/schemas")
+    }
     lint {
         // Version-bump checks depend on the network and would make CI results drift.
         disable += "NewerVersionAvailable"
@@ -57,6 +62,7 @@ room {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)

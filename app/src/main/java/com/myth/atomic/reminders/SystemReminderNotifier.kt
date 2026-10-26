@@ -34,7 +34,7 @@ class SystemReminderNotifier @Inject constructor(
         }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
         val built = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.ic_atom)
             .setContentTitle(notification.title)
             .setContentText(notification.detail)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)

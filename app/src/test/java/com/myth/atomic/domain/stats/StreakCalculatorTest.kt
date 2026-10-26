@@ -2,6 +2,7 @@ package com.myth.atomic.domain.stats
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 class StreakCalculatorTest {
@@ -52,6 +53,18 @@ class StreakCalculatorTest {
         assertEquals(today, stats.lastSevenDays.last().date)
         assertEquals(listOf(1, 0, 0, 0, 0, 0, 2), stats.lastSevenDays.map { it.count })
         assertEquals(3, stats.completedThisWeek)
+    }
+
+    @Test
+    fun heatmapHistoryStartsOnAMondayAndCoversTwelveWeeks() {
+        // 2026-03-14 is a Saturday, so the current week has six days so far.
+        val stats = StreakCalculator.calculate(days(0, 0, 80), today)
+
+        assertEquals(DayOfWeek.MONDAY, stats.days.first().date.dayOfWeek)
+        assertEquals(today, stats.days.last().date)
+        assertEquals(11 * 7 + 6, stats.days.size)
+        assertEquals(2, stats.completedToday)
+        assertEquals(1, stats.days.first { it.date == today.minusDays(80) }.count)
     }
 
     @Test

@@ -53,11 +53,16 @@ class GoalDetailViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GoalDetailUiState.Loading)
 
-    fun updateGoal(title: String, description: String, deadline: LocalDate?) {
+    fun updateGoal(title: String, description: String, deadline: LocalDate?, colorIndex: Int) {
         val goal = (uiState.value as? GoalDetailUiState.Loaded)?.details?.goal ?: return
         viewModelScope.launch {
             goalRepository.updateGoal(
-                goal.copy(title = title.trim(), description = description.trim(), deadline = deadline?.toInstant()),
+                goal.copy(
+                    title = title.trim(),
+                    description = description.trim(),
+                    deadline = deadline?.toInstant(),
+                    colorIndex = colorIndex,
+                ),
             )
         }
     }
