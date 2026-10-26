@@ -1,5 +1,6 @@
 package com.myth.atomic.data.local.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Instant
@@ -13,4 +14,6 @@ data class GoalEntity(
     val deadline: Instant?,
     val createdAt: Instant,
     val completedAt: Instant?,
+    @ColumnInfo(defaultValue = "0")
+    val colorIndex: Int = 0,
 )

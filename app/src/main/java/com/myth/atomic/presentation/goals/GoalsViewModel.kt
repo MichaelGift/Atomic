@@ -16,11 +16,15 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 data class GoalsUiState(
+    val today: LocalDate,
     val isLoading: Boolean = true,
     val active: List<GoalWithProgress> = emptyList(),
     val completed: List<GoalWithProgress> = emptyList(),
 ) {
     val isEmpty: Boolean get() = active.isEmpty() && completed.isEmpty()
+
+    /** Cycle through the palette so new goals look distinct by default. */
+    val nextColorIndex: Int get() = active.size + completed.size
 }
 
 @HiltViewModel
@@ -31,11 +35,11 @@ class GoalsViewModel @Inject constructor(
     val uiState: StateFlow<GoalsUiState> = goalRepository.observeGoalsWithProgress()
         .map { goals ->
             val (completed, active) = goals.partition { it.goal.isCompleted }
-            GoalsUiState(isLoading = false, active = active, completed = completed)
+            GoalsUiState(today = LocalDate.now(clock), isLoading = false, active = active, completed = completed)
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GoalsUiState())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GoalsUiState(today = LocalDate.now(clock)))
 
-    fun addGoal(title: String, description: String, deadline: LocalDate?) {
+    fun addGoal(title: String, description: String, deadline: LocalDate?, colorIndex: Int) {
         viewModelScope.launch {
             goalRepository.addGoal(
                 Goal(
@@ -43,6 +47,7 @@ class GoalsViewModel @Inject constructor(
                     description = description.trim(),
                     deadline = deadline?.atStartOfDay(clock.zone)?.toInstant(),
                     createdAt = clock.instant(),
+                    colorIndex = colorIndex,
                 ),
             )
         }

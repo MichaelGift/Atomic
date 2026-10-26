@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Atomic</string>
 
     <!-- Navigation -->
@@ -24,6 +24,33 @@
     <string name="due_overdue">Overdue · %1$s</string>
 
     <!-- Today -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Still up?</string>
+    <string name="today_nothing_left">Nothing left for today</string>
+    <plurals name="today_tasks_left">
+        <item quantity="one">%1$d task left today</item>
+        <item quantity="other">%1$d tasks left today</item>
+    </plurals>
+    <string name="today_ring_label">today</string>
+    <string name="today_all_clear_title">All clear</string>
+    <string name="today_all_clear_message">Everything due today is done. Enjoy the rest of it.</string>
+    <string name="today_section_activity">Activity</string>
+    <string name="heatmap_title">Last 12 weeks</string>
+    <string name="heatmap_less">Less</string>
+    <string name="heatmap_more">More</string>
+    <plurals name="heatmap_description">
+        <item quantity="one">%1$d task done across %2$d active days in %3$d weeks</item>
+        <item quantity="other">%1$d tasks done across %2$d active days in %3$d weeks</item>
+    </plurals>
+    <plurals name="tasks_done">
+        <item quantity="one">%1$d task</item>
+        <item quantity="other">%1$d tasks</item>
+    </plurals>
+    <string name="quick_add_no_goals_title">Start with a goal</string>
+    <string name="quick_add_no_goals_message">Tasks live inside goals. Create your first goal, then add tasks to it from here.</string>
+    <string name="quick_add_open_goals">Go to goals</string>
     <string name="today_section_overdue">Overdue</string>
     <string name="today_section_due">Due today</string>
     <string name="today_task_completed">Task completed</string>
@@ -31,9 +58,24 @@
     <string name="today_empty_message">Tasks with a due date show up here. Add some from a goal.</string>
 
     <!-- Goals -->
+    <string name="goals_summary" tools:ignore="PluralsCandidate">%1$d active · %2$d completed</string>
+    <string name="goal_create">Create goal</string>
+    <string name="goal_title_placeholder">What do you want to achieve?</string>
+    <string name="goal_color_label">Color</string>
+    <string name="goal_color_option">Color %1$d</string>
+    <string name="goal_deadline_label">Deadline</string>
+    <string name="goal_due_today">Due today</string>
+    <string name="goal_ring_label">done</string>
+    <plurals name="goal_days_left">
+        <item quantity="one">%1$d day left</item>
+        <item quantity="other">%1$d days left</item>
+    </plurals>
+    <plurals name="goal_days_over">
+        <item quantity="one">%1$d day over</item>
+        <item quantity="other">%1$d days over</item>
+    </plurals>
     <string name="goal_new">New goal</string>
     <string name="goal_edit">Edit goal</string>
-    <string name="goal_title_label">Goal</string>
     <string name="goal_description_label">Why it matters (optional)</string>
     <string name="goal_no_deadline">No deadline</string>
     <string name="goal_deadline">By %1$s</string>
@@ -75,15 +117,8 @@
     <string name="notification_channel_reminders_description">Reminders you set for your goals.</string>
 
     <!-- Progress -->
+    <string name="stats_best_and_week" tools:ignore="PluralsCandidate">Best %1$d · %2$d this week</string>
     <string name="stats_current_streak">Day streak</string>
-    <string name="stats_best_streak">Best streak</string>
-    <string name="stats_this_week">Done this week</string>
-    <string name="stats_streak_start">Finish a task today to start a streak.</string>
-    <string name="stats_streak_restart">Finish a task today to start a new streak.</string>
-    <plurals name="stats_week_description">
-        <item quantity="one">%1$d task done in the last 7 days: %2$s</item>
-        <item quantity="other">%1$d tasks done in the last 7 days: %2$s</item>
-    </plurals>
 
     <!-- Widget -->
     <string name="widget_description">Tasks due today and your streak</string>
@@ -101,8 +136,8 @@
     </plurals>
 
     <!-- Tasks -->
+    <string name="task_title_placeholder">The next small step</string>
     <string name="task_add">Add task</string>
-    <string name="task_title_label">Task</string>
     <string name="task_no_due_date">No due date</string>
 
     <!-- Journal -->
@@ -114,7 +149,6 @@
     <string name="journal_untitled">Untitled</string>
     <string name="journal_title_placeholder">Title</string>
     <string name="journal_body_placeholder">What happened? What did you learn?</string>
-    <string name="journal_goal_label">Goal</string>
     <string name="journal_no_goal">No goal</string>
     <string name="journal_empty_title">Your journal is empty</string>
     <string name="journal_empty_message">Write a few lines after a task or at the end of the day.</string>

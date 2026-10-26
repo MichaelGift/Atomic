@@ -8,6 +8,7 @@ work = "2.12.0"
 glance = "1.2.0"
 room = "2.8.5"
 coreKtx = "1.19.1"
+splashscreen = "1.2.0"
 activityCompose = "1.13.0"
 composeBom = "2026.09.00"
 materialIcons = "1.7.8"
@@ -22,6 +23,7 @@ robolectric = "4.17"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }

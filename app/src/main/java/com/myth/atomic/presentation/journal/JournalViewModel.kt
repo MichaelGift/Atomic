@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-data class JournalItem(val entry: JournalEntry, val goalTitle: String?)
+data class JournalItem(val entry: JournalEntry, val goalTitle: String?, val goalColorIndex: Int = 0)
 
 data class JournalUiState(
     val isLoading: Boolean = true,
@@ -43,11 +43,14 @@ class JournalViewModel @Inject constructor(
         goalRepository.observeGoalsWithProgress(),
         _query,
     ) { entries, goals, query ->
-        val goalTitles = goals.associate { it.goal.id to it.goal.title }
+        val goalsById = goals.associate { it.goal.id to it.goal }
         JournalUiState(
             isLoading = false,
             isSearching = query.isNotBlank(),
-            entries = entries.map { JournalItem(it, it.goalId?.let(goalTitles::get)) },
+            entries = entries.map { entry ->
+                val goal = entry.goalId?.let(goalsById::get)
+                JournalItem(entry, goal?.title, goal?.colorIndex ?: 0)
+            },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), JournalUiState())
 

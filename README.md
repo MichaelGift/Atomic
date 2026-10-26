@@ -6,21 +6,35 @@ Break a goal into small tasks, finish a few each day, keep the streak going, and
 
 Atomic is an offline-first Android app built with Kotlin, Jetpack Compose and Material 3. It is a portfolio project: the aim is a small product built the way a production app would be, with a layered architecture, tests, background work and CI.
 
-| Today | Goal detail | Goals |
+| Today | Goals | Goal detail |
 |:---:|:---:|:---:|
-| <img src="docs/screenshots/today.png" width="240" alt="Today screen with streak card and tasks due today"> | <img src="docs/screenshots/goal-detail.png" width="240" alt="Goal detail with tasks and a daily reminder"> | <img src="docs/screenshots/goals.png" width="240" alt="Goals list with progress bars"> |
-| **Journal** | **Dark theme** | **Home-screen widget** |
-| <img src="docs/screenshots/journal.png" width="240" alt="Searchable journal entries linked to goals"> | <img src="docs/screenshots/today-dark.png" width="240" alt="Today screen in dark theme"> | <img src="docs/screenshots/widget.png" width="240" alt="Widget listing today's tasks and the current streak"> |
+| <img src="docs/screenshots/today.png" width="240" alt="Today: greeting, a progress ring for the day, the streak and a week strip, then tasks tagged with their goal"> | <img src="docs/screenshots/goals.png" width="240" alt="Goals as cards with a progress ring in each goal's color and days left"> | <img src="docs/screenshots/goal-detail.png" width="240" alt="Goal detail with a large progress ring and the goal's tasks"> |
+| **Journal** | **Today, dark** | **Goals, dark** |
+| <img src="docs/screenshots/journal.png" width="240" alt="Journal entries grouped by month, each tagged with its goal"> | <img src="docs/screenshots/today-dark.png" width="240" alt="Today screen in the dark theme"> | <img src="docs/screenshots/goals-dark.png" width="240" alt="Goals screen in the dark theme"> |
+
+<img src="docs/screenshots/widget.png" width="300" alt="Home-screen widget with today's tasks, a progress bar and the streak">
 
 ## Features
 
-- **Today**: overdue and due-today tasks from every goal, with a one-tap complete and undo.
-- **Streaks and stats**: current and best streak, plus a seven-day bar chart of completed tasks.
-- **Goals**: a description, an optional deadline, and progress from their tasks. Goals can be edited, completed, reopened or deleted.
+- **Today**: a progress ring for the day, overdue and due-today tasks from every goal, and quick add straight into any goal. Completing a task has an animated check and an undo.
+- **Streaks and activity**: current and best streak, a week strip, and a 12-week activity heatmap.
+- **Goals**: each has its own color, a description, an optional deadline with a days-left countdown, and progress from its tasks. Goals can be edited, completed, reopened or deleted; tasks are swiped away to delete.
 - **Reminders**: once, daily or weekly notifications per goal. They survive reboots and time-zone changes and keep their local time across daylight saving.
 - **Journal**: searchable entries, optionally linked to a goal. Deleting a goal never deletes the writing.
 - **Widget**: today's tasks, checkable from the home screen, and the current streak.
-- Material You dynamic color, a dark theme, edge-to-edge layout and screen-reader descriptions for the chart.
+- Light and dark themes, an edge-to-edge layout, and screen-reader descriptions for the ring, heatmap and charts.
+
+## Design
+
+Atomic has its own visual identity instead of Material You's wallpaper colors, so it looks the same on every device.
+
+- **Palette**: ink and paper neutrals with a single electric-lime accent for progress and primary actions, and an ember for streaks and anything overdue. Each goal picks one of six colors, which then tints its ring, checks, tags and reminders.
+- **Type**: [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) for headings and numbers, [Inter](https://fonts.google.com/specimen/Inter) for reading. Both ship as variable fonts under the SIL Open Font License (see `docs/licenses/`).
+- **Shape and depth**: large-radius cards with no shadows; depth comes from tone. Only the floating navigation pill casts a shadow.
+- **Motion**: rings spring to new values, checks fill, draw their tick and burst, and the nav pill widens to label the current tab.
+- **Brand**: an atom mark for the adaptive launcher icon (with a monochrome layer for themed icons), the splash screen, notifications and the widget.
+
+The tokens live in `presentation/theme/` (`Color.kt`, `Type.kt`, `Theme.kt`), and the shared pieces in `presentation/components/`: `ProgressRing`, `CheckButton`, `ActivityHeatmap`, `WeekStrip`, `FloatingNavBar`, `EditorSheet`, `TaskRow`, `Tag` and `AtomicCard`.
 
 ## Architecture
 
@@ -75,20 +89,22 @@ app/src/main/java/com/myth/atomic/
 - **The domain owns the models.** Room entities stay in the data layer and are mapped at the repository boundary, so a schema change never reaches the UI.
 - **Use cases only where there is logic.** Streak calculation, recurrence and alarm handling are use cases. Plain reads and writes go straight to a repository instead of through pass-through classes.
 - **Completion is a timestamp, not a flag.** Storing `completedAt` is what makes streaks and the weekly chart possible.
-- **Relational schema with explicit delete rules.** Tasks and reminders cascade with their goal. Journal entries are detached (`SET_NULL`) instead, so a user's writing is never lost as a side effect. Schemas are exported to `app/schemas/` for migration testing.
+- **Relational schema with explicit delete rules.** Tasks and reminders cascade with their goal. Journal entries are detached (`SET_NULL`) instead, so a user's writing is never lost as a side effect.
+- **Migrations are tested, not hoped for.** Schemas are exported to `app/schemas/`. Goal colors arrived in version 2 as a Room auto-migration, and a test upgrades a real version-1 database and checks the data survives.
 - **Reminders use AlarmManager and WorkManager together.** Each reminder is an alarm, exact when the user has granted exact alarms and inexact otherwise, so the app never nags for that permission. Android drops alarms on reboot, update and force-stop, so a worker re-registers them on each of those events and on app start.
 - **Recurrence is computed in local time.** A daily reminder at 7:00 stays at 7:00 when daylight saving begins. A test covers the US spring-forward change.
 - **Screens are split in two.** Each screen has a stateful `XScreen`, which takes its ViewModel from Hilt, and a stateless `XContent`. The stateless half is what the previews and Compose UI tests render.
 
 ## Testing
 
-40 JVM tests run on every push, without an emulator:
+42 JVM tests run on every push, without an emulator:
 
 | Area | How |
 |---|---|
 | Streak rules, recurrence, reminder use cases | Plain JUnit with in-memory fakes and a fixed `Clock` |
 | ViewModels | Fakes, plus `kotlinx-coroutines-test` with a main-dispatcher rule |
 | Room schema, relations, delete rules, queries | In-memory database under Robolectric |
+| Schema migrations | `MigrationTestHelper` upgrading databases built from the exported schemas |
 | AlarmManager scheduling | Robolectric's `ShadowAlarmManager` |
 | Compose UI | `createComposeRule` under Robolectric |
 

@@ -9,6 +9,8 @@ data class Goal(
     val deadline: Instant? = null,
     val createdAt: Instant = Instant.now(),
     val completedAt: Instant? = null,
+    /** Index into the UI's goal palette; the domain does not know what the colors are. */
+    val colorIndex: Int = 0,
 ) {
     val isCompleted: Boolean get() = completedAt != null
 }

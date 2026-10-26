@@ -1,4 +1,13 @@
 <resources>
     <!-- Window theme only; all UI theming lives in Compose (presentation/theme). -->
-    <style name="Theme.Atomic" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Atomic" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <!-- Shown while the app starts: the atom on ink, in both light and dark mode. -->
+    <style name="Theme.Atomic.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ink</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Atomic</item>
+    </style>
 </resources>
