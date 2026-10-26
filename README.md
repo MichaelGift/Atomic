@@ -82,7 +82,7 @@ app/src/main/java/com/myth/atomic/
 
 ## Testing
 
-38 JVM tests run on every push, without an emulator:
+40 JVM tests run on every push, without an emulator:
 
 | Area | How |
 |---|---|
