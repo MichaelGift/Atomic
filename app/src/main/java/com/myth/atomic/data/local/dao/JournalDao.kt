@@ -18,6 +18,9 @@ interface JournalDao {
     @Query("DELETE FROM journal_entries WHERE id = :entryId")
     suspend fun deleteById(entryId: Long)
 
+    @Query("SELECT * FROM journal_entries WHERE id = :entryId")
+    suspend fun getById(entryId: Long): JournalEntryEntity?
+
     @Query("SELECT * FROM journal_entries ORDER BY createdAt DESC")
     fun observeAll(): Flow<List<JournalEntryEntity>>
 

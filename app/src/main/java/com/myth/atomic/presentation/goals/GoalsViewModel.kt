@@ -8,28 +8,43 @@ import com.myth.atomic.domain.repository.GoalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Clock
+import java.time.LocalDate
 import javax.inject.Inject
+
+data class GoalsUiState(
+    val isLoading: Boolean = true,
+    val active: List<GoalWithProgress> = emptyList(),
+    val completed: List<GoalWithProgress> = emptyList(),
+) {
+    val isEmpty: Boolean get() = active.isEmpty() && completed.isEmpty()
+}
 
 @HiltViewModel
 class GoalsViewModel @Inject constructor(
     private val goalRepository: GoalRepository,
+    private val clock: Clock,
 ) : ViewModel() {
-    val goals: StateFlow<List<GoalWithProgress>> = goalRepository.observeGoalsWithProgress()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
-    fun addGoal(title: String, description: String = "") {
-        viewModelScope.launch {
-            goalRepository.addGoal(Goal(title = title.trim(), description = description.trim()))
+    val uiState: StateFlow<GoalsUiState> = goalRepository.observeGoalsWithProgress()
+        .map { goals ->
+            val (completed, active) = goals.partition { it.goal.isCompleted }
+            GoalsUiState(isLoading = false, active = active, completed = completed)
         }
-    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GoalsUiState())
 
-    fun setCompleted(goalId: Long, completed: Boolean) {
-        viewModelScope.launch { goalRepository.setGoalCompleted(goalId, completed) }
-    }
-
-    fun deleteGoal(goalId: Long) {
-        viewModelScope.launch { goalRepository.deleteGoal(goalId) }
+    fun addGoal(title: String, description: String, deadline: LocalDate?) {
+        viewModelScope.launch {
+            goalRepository.addGoal(
+                Goal(
+                    title = title.trim(),
+                    description = description.trim(),
+                    deadline = deadline?.atStartOfDay(clock.zone)?.toInstant(),
+                    createdAt = clock.instant(),
+                ),
+            )
+        }
     }
 }

@@ -19,6 +19,8 @@ class RoomJournalRepository @Inject constructor(
     override fun searchEntries(query: String): Flow<List<JournalEntry>> =
         journalDao.search(query).map { rows -> rows.map { it.toDomain() } }
 
+    override suspend fun getEntry(entryId: Long): JournalEntry? = journalDao.getById(entryId)?.toDomain()
+
     override suspend fun addEntry(entry: JournalEntry): Long = journalDao.insert(entry.toEntity())
 
     override suspend fun updateEntry(entry: JournalEntry) = journalDao.update(entry.toEntity())
