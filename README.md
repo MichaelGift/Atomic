@@ -122,6 +122,18 @@ You need Android Studio (its bundled JDK 21 works) with the Android SDK. The bui
 
 The app runs on Android 8.0 (API 26) and later, and targets API 36.
 
+## Releases
+
+Pushing a version tag builds a signed APK and publishes it as a GitHub Release ([`release.yaml`](.github/workflows/release.yaml)):
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+The tag must point at a commit on `master`. The tag becomes `versionName` and the workflow run number (plus 100) becomes `versionCode`, so each release installs over the last. Tags with a suffix, such as `v1.1.0-beta.1`, are published as pre-releases. Before an APK is attached, the workflow runs the unit tests and checks the signature with `apksigner`.
+
+Signing uses four repository secrets: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` and `KEY_PASSWORD`. Locally, without them, `assembleRelease` produces an unsigned APK.
+
 ## Tech stack
 
 | | |
