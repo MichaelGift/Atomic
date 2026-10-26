@@ -55,6 +55,45 @@
         <item quantity="other">%1$d of %2$d tasks done</item>
     </plurals>
 
+    <!-- Reminders -->
+    <string name="goal_section_reminders">Reminders</string>
+    <string name="goal_reminders_empty">Get a nudge to keep this goal moving.</string>
+    <string name="reminder_add">New reminder</string>
+    <string name="reminder_add_short">Add</string>
+    <string name="reminder_delete">Delete reminder</string>
+    <string name="reminder_title_label">Reminder</string>
+    <string name="reminder_once">%1$s at %2$s</string>
+    <string name="reminder_daily">Every day at %1$s</string>
+    <string name="reminder_weekly">Every %1$s at %2$s</string>
+    <string name="reminder_past">%1$s · sent</string>
+    <string name="reminder_in_past">Pick a time in the future.</string>
+    <string name="reminder_notifications_off">Notifications are off, so reminders will not appear. You can turn them on in Settings.</string>
+    <string name="repeat_none">Once</string>
+    <string name="repeat_daily">Daily</string>
+    <string name="repeat_weekly">Weekly</string>
+    <string name="notification_channel_reminders">Reminders</string>
+    <string name="notification_channel_reminders_description">Reminders you set for your goals.</string>
+
+    <!-- Progress -->
+    <string name="stats_current_streak">Day streak</string>
+    <string name="stats_best_streak">Best streak</string>
+    <string name="stats_this_week">Done this week</string>
+    <string name="stats_streak_start">Finish a task today to start a streak.</string>
+    <string name="stats_streak_restart">Finish a task today to start a new streak.</string>
+    <plurals name="stats_week_description">
+        <item quantity="one">%1$d task done in the last 7 days: %2$s</item>
+        <item quantity="other">%1$d tasks done in the last 7 days: %2$s</item>
+    </plurals>
+
+    <!-- Widget -->
+    <string name="widget_description">Tasks due today and your streak</string>
+    <string name="widget_all_clear">All clear for today.</string>
+    <string name="widget_more">+%1$d more</string>
+    <plurals name="widget_streak">
+        <item quantity="one">%1$d-day streak</item>
+        <item quantity="other">%1$d-day streak</item>
+    </plurals>
+
     <!-- Tasks -->
     <string name="task_add">Add task</string>
     <string name="task_title_label">Task</string>

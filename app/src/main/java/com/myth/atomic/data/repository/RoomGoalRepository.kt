@@ -23,6 +23,8 @@ class RoomGoalRepository @Inject constructor(
     override fun searchGoals(query: String): Flow<List<Goal>> =
         goalDao.search(query).map { rows -> rows.map { it.toDomain() } }
 
+    override suspend fun getGoal(goalId: Long): Goal? = goalDao.getById(goalId)?.toDomain()
+
     override suspend fun addGoal(goal: Goal): Long = goalDao.insert(goal.toEntity())
 
     override suspend fun updateGoal(goal: Goal) = goalDao.update(goal.toEntity())

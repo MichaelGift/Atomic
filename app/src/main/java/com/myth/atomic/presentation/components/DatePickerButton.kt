@@ -30,6 +30,7 @@ fun DatePickerButton(
     emptyLabel: String,
     onDateChange: (LocalDate?) -> Unit,
     modifier: Modifier = Modifier,
+    clearable: Boolean = true,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
 
@@ -39,7 +40,7 @@ fun DatePickerButton(
             label = { Text(date?.formatMedium() ?: emptyLabel) },
             leadingIcon = { Icon(Icons.Default.DateRange, contentDescription = null) },
         )
-        if (date != null) {
+        if (clearable && date != null) {
             IconButton(onClick = { onDateChange(null) }) {
                 Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.action_clear_date))
             }

@@ -22,6 +22,12 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE id = :taskId")
     suspend fun deleteById(taskId: Long)
 
+    @Query("SELECT * FROM tasks WHERE id = :taskId")
+    suspend fun getById(taskId: Long): TaskEntity?
+
+    @Query("SELECT completedAt FROM tasks WHERE completedAt IS NOT NULL")
+    fun observeCompletionTimes(): Flow<List<Instant>>
+
     // Open tasks first, then by due date with undated tasks last.
     @Query(
         """

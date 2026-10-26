@@ -11,6 +11,11 @@ interface TaskRepository {
     fun observeOpenTasksDueBefore(end: Instant): Flow<List<Task>>
     fun searchTasks(query: String): Flow<List<Task>>
 
+    /** When each completed task was completed, in no particular order. */
+    fun observeCompletionTimes(): Flow<List<Instant>>
+
+    suspend fun getTask(taskId: Long): Task?
+
     suspend fun addTask(task: Task): Long
     suspend fun updateTask(task: Task)
     suspend fun setTaskCompleted(taskId: Long, completed: Boolean)

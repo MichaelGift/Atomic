@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.myth.atomic.domain.model.GoalDetails
+import com.myth.atomic.domain.model.Reminder
+import com.myth.atomic.domain.model.RepeatInterval
 import com.myth.atomic.domain.model.Task
+import com.myth.atomic.domain.reminders.AddReminderUseCase
+import com.myth.atomic.domain.reminders.DeleteReminderUseCase
 import com.myth.atomic.domain.repository.GoalRepository
 import com.myth.atomic.domain.repository.TaskRepository
 import com.myth.atomic.presentation.navigation.GoalDetailRoute
@@ -17,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 sealed interface GoalDetailUiState {
@@ -36,6 +41,8 @@ class GoalDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val goalRepository: GoalRepository,
     private val taskRepository: TaskRepository,
+    private val addReminderUseCase: AddReminderUseCase,
+    private val deleteReminderUseCase: DeleteReminderUseCase,
     private val clock: Clock,
 ) : ViewModel() {
     private val goalId = savedStateHandle.toRoute<GoalDetailRoute>().goalId
@@ -60,7 +67,29 @@ class GoalDetailViewModel @Inject constructor(
     }
 
     fun deleteGoal() {
-        viewModelScope.launch { goalRepository.deleteGoal(goalId) }
+        val reminders = (uiState.value as? GoalDetailUiState.Loaded)?.details?.reminders.orEmpty()
+        viewModelScope.launch {
+            // The database cascade removes the rows, but the alarms must be cancelled explicitly.
+            reminders.forEach { deleteReminderUseCase(it.id) }
+            goalRepository.deleteGoal(goalId)
+        }
+    }
+
+    fun addReminder(title: String, date: LocalDate, time: LocalTime, repeat: RepeatInterval) {
+        viewModelScope.launch {
+            addReminderUseCase(
+                Reminder(
+                    title = title.trim(),
+                    triggerAt = date.atTime(time).atZone(clock.zone).toInstant(),
+                    repeat = repeat,
+                    goalId = goalId,
+                ),
+            )
+        }
+    }
+
+    fun deleteReminder(reminderId: Long) {
+        viewModelScope.launch { deleteReminderUseCase(reminderId) }
     }
 
     fun addTask(title: String, dueDate: LocalDate?) {

@@ -25,11 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import com.myth.atomic.R
 import com.myth.atomic.presentation.goaldetail.GoalDetailScreen
 import com.myth.atomic.presentation.goals.GoalsScreen
 import com.myth.atomic.presentation.journal.JournalScreen
 import com.myth.atomic.presentation.journal.editor.JournalEditorScreen
+import com.myth.atomic.presentation.navigation.GOAL_DEEP_LINK_BASE
 import com.myth.atomic.presentation.navigation.GoalDetailRoute
 import com.myth.atomic.presentation.navigation.GoalsRoute
 import com.myth.atomic.presentation.navigation.JournalEditorRoute
@@ -98,7 +100,9 @@ fun AtomicApp() {
                     onOpenEntry = { navController.navigate(JournalEditorRoute(entryId = it)) },
                 )
             }
-            composable<GoalDetailRoute> {
+            composable<GoalDetailRoute>(
+                deepLinks = listOf(navDeepLink<GoalDetailRoute>(basePath = GOAL_DEEP_LINK_BASE)),
+            ) {
                 GoalDetailScreen(
                     onBack = navController::popBackStack,
                     onWriteEntry = { goalId -> navController.navigate(JournalEditorRoute(goalId = goalId)) },
