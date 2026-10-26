@@ -1,5 +1,78 @@
 <resources>
     <string name="app_name">Atomic</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Navigation -->
+    <string name="nav_today">Today</string>
+    <string name="nav_goals">Goals</string>
+    <string name="nav_journal">Journal</string>
+
+    <!-- Common actions -->
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_more">More options</string>
+    <string name="action_clear_date">Clear date</string>
+    <string name="action_clear_search">Clear search</string>
+    <string name="action_delete_task">Delete task</string>
+
+    <!-- Due dates -->
+    <string name="due_today">Due today</string>
+    <string name="due_tomorrow">Due tomorrow</string>
+    <string name="due_on">Due %1$s</string>
+    <string name="due_overdue">Overdue · %1$s</string>
+
+    <!-- Today -->
+    <string name="today_section_overdue">Overdue</string>
+    <string name="today_section_due">Due today</string>
+    <string name="today_task_completed">Task completed</string>
+    <string name="today_empty_title">Nothing due today</string>
+    <string name="today_empty_message">Tasks with a due date show up here. Add some from a goal.</string>
+
+    <!-- Goals -->
+    <string name="goal_new">New goal</string>
+    <string name="goal_edit">Edit goal</string>
+    <string name="goal_title_label">Goal</string>
+    <string name="goal_description_label">Why it matters (optional)</string>
+    <string name="goal_no_deadline">No deadline</string>
+    <string name="goal_deadline">By %1$s</string>
+    <string name="goal_completed">Completed</string>
+    <string name="goal_mark_complete">Mark as complete</string>
+    <string name="goal_reopen">Reopen goal</string>
+    <string name="goal_delete_title">Delete goal</string>
+    <string name="goal_delete_message">Delete “%1$s” and its tasks? Journal entries are kept.</string>
+    <string name="goal_section_tasks">Tasks</string>
+    <string name="goal_section_journal">Journal</string>
+    <string name="goal_tasks_empty">Break this goal into small tasks you can finish in a day.</string>
+    <string name="goal_journal_empty">Reflect on how this goal is going.</string>
+    <string name="goals_section_completed">Completed</string>
+    <string name="goals_empty_title">No goals yet</string>
+    <string name="goals_empty_message">Start with one goal, then break it into atomic tasks.</string>
+    <string name="goal_no_tasks">No tasks yet</string>
+    <plurals name="goal_tasks_progress">
+        <item quantity="one">%1$d of %2$d task done</item>
+        <item quantity="other">%1$d of %2$d tasks done</item>
+    </plurals>
+
+    <!-- Tasks -->
+    <string name="task_add">Add task</string>
+    <string name="task_title_label">Task</string>
+    <string name="task_no_due_date">No due date</string>
+
+    <!-- Journal -->
+    <string name="journal_new">New entry</string>
+    <string name="journal_edit">Edit entry</string>
+    <string name="journal_write">Write</string>
+    <string name="journal_delete">Delete entry</string>
+    <string name="journal_search">Search entries</string>
+    <string name="journal_untitled">Untitled</string>
+    <string name="journal_title_placeholder">Title</string>
+    <string name="journal_body_placeholder">What happened? What did you learn?</string>
+    <string name="journal_goal_label">Goal</string>
+    <string name="journal_no_goal">No goal</string>
+    <string name="journal_empty_title">Your journal is empty</string>
+    <string name="journal_empty_message">Write a few lines after a task or at the end of the day.</string>
+    <string name="journal_no_results_title">No matching entries</string>
+    <string name="journal_no_results_message">Try a different word.</string>
 </resources>

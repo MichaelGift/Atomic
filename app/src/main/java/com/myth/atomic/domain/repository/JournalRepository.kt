@@ -8,6 +8,7 @@ interface JournalRepository {
     fun observeEntriesForGoal(goalId: Long): Flow<List<JournalEntry>>
     fun searchEntries(query: String): Flow<List<JournalEntry>>
 
+    suspend fun getEntry(entryId: Long): JournalEntry?
     suspend fun addEntry(entry: JournalEntry): Long
     suspend fun updateEntry(entry: JournalEntry)
     suspend fun deleteEntry(entryId: Long)
