@@ -54,6 +54,24 @@ class AtomicWidget : GlanceAppWidget() {
             }
         }
     }
+
+    /** The picture shown in the launcher's widget picker on Android 15+. */
+    override suspend fun providePreview(context: Context, widgetCategory: Int) {
+        val sample = WidgetState(
+            tasks = listOf(
+                WidgetTask(1, context.getString(R.string.widget_preview_task_1), "", isOverdue = true),
+                WidgetTask(2, context.getString(R.string.widget_preview_task_2), "", isOverdue = false),
+                WidgetTask(3, context.getString(R.string.widget_preview_task_3), "", isOverdue = false),
+            ),
+            totalDue = 3,
+            streak = 6,
+        )
+        provideContent {
+            GlanceTheme {
+                WidgetContent(sample)
+            }
+        }
+    }
 }
 
 class AtomicWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -124,7 +142,7 @@ private fun WidgetContent(state: WidgetState) {
                 if (state.totalDue > state.tasks.size) {
                     item {
                         Text(
-                            context.getString(R.string.widget_more, state.totalDue - state.tasks.size),
+                            (state.totalDue - state.tasks.size).let { context.resources.getQuantityString(R.plurals.widget_more, it, it) },
                             style = TextStyle(fontSize = 13.sp, color = GlanceTheme.colors.onSurfaceVariant),
                             modifier = GlanceModifier.padding(top = 4.dp).clickable(actionStartActivity<MainActivity>()),
                         )

@@ -32,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -49,7 +50,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.TextStyle
-import java.util.Locale
 
 private val shortTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
 
@@ -63,7 +63,7 @@ fun ReminderRow(reminder: Reminder, onDelete: () -> Unit, modifier: Modifier = M
         RepeatInterval.DAILY -> stringResource(R.string.reminder_daily, time)
         RepeatInterval.WEEKLY -> stringResource(
             R.string.reminder_weekly,
-            at.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+            at.dayOfWeek.getDisplayName(TextStyle.FULL, LocalConfiguration.current.locales[0]),
             time,
         )
     }
